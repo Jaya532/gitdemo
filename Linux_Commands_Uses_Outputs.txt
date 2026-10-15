@@ -1,0 +1,1202 @@
+LINUX COMMANDS HANDBOOK
+Commands, Uses, Examples, and Sample Outputs
+For Linux / DevOps Fresher Training
+
+IMPORTANT NOTES
+- Sample outputs are examples. Your output can differ by Linux distribution, permissions, installed packages, and machine state.
+- Commands marked with sudo require suitable sudo privileges.
+- Practice on a test EC2 instance, not a production server.
+- Be careful with commands that delete files, change permissions, restart services, or modify configuration.
+- Amazon Linux 2023 examples use dnf. Ubuntu examples usually use apt.
+- Replace placeholders such as <EC2-PUBLIC-IP>, <PID>, and <service> with real values.
+- Some examples use sample files created below.
+
+============================================================
+1. BASIC SYSTEM AND NAVIGATION COMMANDS
+============================================================
+
+1. pwd
+
+Use: Prints the current working directory.
+
+Command:
+  pwd
+Sample output:
+  /home/ec2-user
+
+2. whoami
+Use: Shows the current username.
+Command:
+  whoami
+Sample output:
+  ec2-user
+
+
+3. id
+Use: Shows user ID, primary group, and supplementary groups.
+Command:
+  id
+Sample output:
+  uid=1000(ec2-user) gid=1000(ec2-user) groups=1000(ec2-user),10(wheel)
+
+
+4. hostname
+Use: Prints the system hostname.
+Command:
+  hostname
+Sample output:
+  ip-10-0-1-25
+
+5. hostnamectl
+Use: Shows or manages hostname and system information.
+Command:
+  hostnamectl
+Sample output:
+  Static hostname: ip-10-0-1-25
+  Operating System: Amazon Linux 2023
+  Kernel: Linux 6.x
+
+6. uname -a
+Use: Shows kernel and system information.
+Command:
+  uname -a
+Sample output:
+  Linux ip-10-0-1-25 6.x.x #1 SMP x86_64 GNU/Linux
+
+7. cat /etc/os-release
+Use: Identifies the Linux distribution and version.
+Command:
+  cat /etc/os-release
+Sample output:
+  NAME="Amazon Linux"
+  VERSION="2023"
+
+8. uptime
+Use: Shows how long the system has been running, logged-in users, and load averages.
+Command:
+  uptime
+Sample output:
+  10:15:00 up 2 days, 3:20, 1 user, load average: 0.10, 0.08, 0.05
+
+9. date
+Use: Shows the current date and time.
+Command:
+  date
+Sample output:
+  Fri Oct  9 10:15:00 UTC 2026
+
+10. clear
+Use: Clears the terminal display.
+Command:
+  clear
+Sample output:
+  Terminal screen is cleared.
+
+============================================================
+2. FILES AND DIRECTORIES
+============================================================
+
+11. ls
+Use: Lists files and directories.
+Command:
+  ls
+Sample output:
+  file1.txt  logs  scripts
+
+12. ls -l
+Use: Shows detailed file information, including permissions, owner, size, and modification time.
+Command:
+  ls -l
+Sample output:
+  -rw-r--r-- 1 ec2-user ec2-user 120 Oct  9 10:00 file1.txt
+
+13. ls -la
+Use: Includes hidden files and directories.
+Command:
+  ls -la
+Sample output:
+  drwx------ 5 ec2-user ec2-user 4096 Oct  9 09:00 .
+  -rw------- 1 ec2-user ec2-user  220 Oct  9 09:00 .bash_history
+
+14. ls -ltr
+Use: Lists files in long format, oldest modification time first.
+Command:
+  ls -ltr
+Sample output:
+  -rw-r--r-- 1 ec2-user ec2-user 120 Oct  8 10:00 old.log
+  -rw-r--r-- 1 ec2-user ec2-user 240 Oct  9 10:00 new.log
+
+15. cd
+Use: Changes the current directory.
+Command:
+  cd /var/log
+  pwd
+Sample output:
+  /var/log
+
+16. mkdir
+Use: Creates a directory.
+Command:
+  mkdir practice
+  ls -d practice
+Sample output:
+  practice
+
+17. mkdir -p
+Use: Creates nested directories, including missing parent directories.
+Command:
+  mkdir -p practice/devops/logs
+  ls practice/devops
+Sample output:
+  logs
+
+18. touch
+Use: Creates an empty file or updates a file's timestamp.
+Command:
+  touch sample.txt
+  ls -l sample.txt
+Sample output:
+  -rw-r--r-- 1 ec2-user ec2-user 0 Oct  9 10:00 sample.txt
+
+19. cp
+Use: Copies files.
+Command:
+  cp sample.txt sample-copy.txt
+  ls sample-copy.txt
+Sample output:
+  sample-copy.txt
+
+20. mv
+Use: Moves or renames files.
+Command:
+  mv sample-copy.txt renamed.txt
+  ls renamed.txt
+Sample output:
+  renamed.txt
+
+21. rm
+Use: Deletes files. Use carefully; deleted files may not be recoverable.
+Command:
+  rm unwanted.txt
+Sample output:
+  (No output if successful.)
+
+22. rmdir
+Use: Removes an empty directory.
+Command:
+  rmdir emptydir
+Sample output:
+  (No output if successful.)
+
+23. file
+Use: Identifies the type of a file.
+Command:
+  file /etc/passwd
+Sample output:
+  /etc/passwd: ASCII text
+
+24. stat
+Use: Shows file metadata, including size, permissions, and timestamps.
+Command:
+  stat sample.txt
+Sample output:
+  File: sample.txt
+  Size: 0  Blocks: 0  IO Block: 4096 regular empty file
+
+============================================================
+3. VIEWING AND PROCESSING TEXT
+============================================================
+
+Create sample data for the following exercises:
+  cat > employees.txt <<'EOF'
+  Rajesh DevOps 100000
+  Sarma Linux 80000
+  Ravi AWS 90000
+  EOF
+
+25. cat
+Use: Prints file contents.
+Command:
+  cat employees.txt
+Sample output:
+  Rajesh DevOps 100000
+  Sarma Linux 80000
+  Ravi AWS 90000
+
+26. less
+Use: Views large files page by page. Press q to exit.
+Command:
+  less /var/log/messages
+Sample output:
+  Opens the file in a scrollable viewer.
+
+27. head
+Use: Displays the first 10 lines by default.
+Command:
+  head employees.txt
+Sample output:
+  Rajesh DevOps 100000
+  Sarma Linux 80000
+  Ravi AWS 90000
+
+28. head -n 2
+Use: Displays the first two lines.
+Command:
+  head -n 2 employees.txt
+Sample output:
+  Rajesh DevOps 100000
+  Sarma Linux 80000
+
+29. tail
+Use: Displays the last 10 lines by default.
+Command:
+  tail employees.txt
+Sample output:
+  Rajesh DevOps 100000
+  Sarma Linux 80000
+  Ravi AWS 90000
+
+30. tail -n 2
+Use: Displays the last two lines.
+Command:
+  tail -n 2 employees.txt
+Sample output:
+  Sarma Linux 80000
+  Ravi AWS 90000
+
+31. tail -f
+Use: Follows a log as new lines are added. Press Ctrl+C to stop.
+Command:
+  sudo tail -f /var/log/nginx/access.log
+Sample output:
+  10.0.1.20 - - [09/Oct/2026:10:10:00 +0000] "GET / HTTP/1.1" 200 615
+
+32. wc -l
+Use: Counts lines in a file.
+Command:
+  wc -l employees.txt
+Sample output:
+  3 employees.txt
+
+33. sort
+Use: Sorts lines alphabetically by default.
+Command:
+  sort employees.txt
+Sample output:
+  Rajesh DevOps 100000
+  Ravi AWS 90000
+  Sarma Linux 80000
+
+34. uniq
+Use: Removes adjacent duplicate lines; usually combine with sort.
+Command:
+  printf 'error\\ninfo\\nerror\\n' | sort | uniq
+Sample output:
+  error
+  info
+
+35. cut
+Use: Extracts characters or delimited fields.
+Command:
+  printf 'Rajesh:DevOps:100000\\n' | cut -d ':' -f 1,2
+Sample output:
+  Rajesh:DevOps
+
+36. tr
+Use: Translates or deletes characters.
+Command:
+  echo 'devops' | tr 'a-z' 'A-Z'
+Sample output:
+  DEVOPS
+
+37. grep
+Use: Searches for matching text.
+Command:
+  grep 'Linux' employees.txt
+Sample output:
+  Sarma Linux 80000
+
+38. grep -i
+Use: Searches without case sensitivity.
+Command:
+  grep -i 'linux' employees.txt
+Sample output:
+  Sarma Linux 80000
+
+39. grep -n
+Use: Shows matching lines with line numbers.
+Command:
+  grep -n 'AWS' employees.txt
+Sample output:
+  3:Ravi AWS 90000
+
+40. grep -r
+Use: Searches recursively through files in a directory.
+Command:
+  grep -r 'error' ./logs
+Sample output:
+  ./logs/app.log:error: database connection failed
+
+41. find
+Use: Searches for files and directories by name, type, size, and other criteria.
+Command:
+  find . -name '*.txt'
+Sample output:
+  ./employees.txt
+  ./sample.txt
+
+42. find files larger than 500 MB
+Use: Finds large files that may contribute to disk usage.
+Command:
+  sudo find /var -type f -size +500M -exec ls -lh {} \\;
+Sample output:
+  -rw------- 1 root root 650M Oct  9 09:00 /var/log/example.log
+Note: The sample file may not exist on your machine.
+
+============================================================
+4. AWK COMMAND
+============================================================
+
+awk processes text line by line and is often used to select columns and filter data.
+
+employee.txt file data : 
+Rajesh DevOps 100000
+Sarma Linux 80000
+Ravi AWS 90000
+
+
+43. Print first column
+Command:
+  awk '{print $1}' employees.txt
+Use: Prints the first whitespace-separated field.
+Sample output:
+  Rajesh
+  Sarma
+  Ravi
+
+44. Print second and third columns
+Command:
+  awk '{print $2, $3}' employees.txt
+Use: Extracts selected columns.
+Sample output:
+  DevOps 100000
+  Linux 80000
+  AWS 90000
+
+45. Filter rows by a numeric condition
+Command:
+  awk '$3 > 85000 {print $1, $3}' employees.txt
+Use: Prints employees whose third field is greater than 85000.
+Sample output:
+  Rajesh 100000
+  Ravi 90000
+
+46. Print the last field
+Command:
+  awk '{print $NF}' employees.txt
+Use: $NF means the last field on the current line.
+Sample output:
+  100000
+  80000
+  90000
+
+47. Count lines
+Command:
+  awk 'END {print NR}' employees.txt
+Use: NR is the current record/line number.
+Sample output:
+  3
+
+48. Extract filesystem and usage percentage
+Command:
+  df -h | awk 'NR > 1 {print $1, $5}'
+Use: Skips the header and prints filesystem and usage percentage.
+Sample output:
+  devtmpfs 0%
+  /dev/nvme0n1p1 23%
+Note: Actual values vary by machine.
+
+============================================================
+5. SED COMMAND
+============================================================
+
+sed is a stream editor used to substitute, print, or delete text.
+employee.txt : 
+Rajesh DevOps 100000
+Sarma Linux 80000
+Ravi AWS 90000
+
+
+
+49. Replace first occurrence on each line (display only)
+Command:
+  sed 's/Sarma/Rajesh/' employees.txt
+Use: Replaces the first Sarma occurrence on each line in output; original file stays unchanged.
+Sample output:
+  Rajesh DevOps 100000
+  Rajesh Linux 80000
+  Ravi AWS 90000
+
+50. Replace all occurrences on each line
+Command:
+  echo 'error error error' | sed 's/error/issue/g'
+Use: g means replace every match on each line.
+Sample output:
+  issue issue issue
+
+51. Delete line 2 from output
+Command:
+  sed '2d' employees.txt
+Use: Displays all lines except line 2; does not edit the original file.
+Sample output:
+  Rajesh DevOps 100000
+  Ravi AWS 90000
+
+52. Print only line 2
+Command:
+  sed -n '2p' employees.txt
+Use: -n suppresses normal output; p prints the selected line.
+Sample output:
+  Sarma Linux 80000
+
+53. Replace text in a file permanently (make a backup first)
+Command:
+  cp employees.txt employees.txt.bak
+  sed -i 's/Sarma/Rajesh/' employees.txt
+  grep 'Rajesh' employees.txt
+Use: -i edits the file in place.
+Sample output:
+  Rajesh DevOps 100000
+  Rajesh Linux 80000
+Caution: This changes the original file. Restore with:
+  cp employees.txt.bak employees.txt
+
+============================================================
+6. USERS, GROUPS, PERMISSIONS
+============================================================
+
+54. ls -l
+Use: Inspects permissions and ownership.
+Command:
+  ls -l sample.txt
+Sample output:
+  -rw-r--r-- 1 ec2-user ec2-user 0 Oct  9 10:00 sample.txt
+
+55. chmod
+Use: Changes file permissions.
+Command:
+  chmod 640 sample.txt
+  ls -l sample.txt
+Sample output:
+  -rw-r----- 1 ec2-user ec2-user 0 Oct  9 10:00 sample.txt
+
+56. chmod +x
+Use: Adds execute permission.
+Command:
+  chmod +x deploy.sh
+  ls -l deploy.sh
+Sample output:
+  -rwxr-xr-x 1 ec2-user ec2-user 50 Oct 9 10:00 deploy.sh
+Note: Exact permissions depend on the original file mode.
+
+57. chown
+Use: Changes file owner/group; normally requires sudo.
+Command:
+  sudo chown ec2-user:ec2-user sample.txt
+Sample output:
+  (No output if successful.)
+
+58. useradd
+Use: Creates a local user.
+Command:
+  sudo useradd trainee
+Sample output:
+  (No output if successful.)
+Verify:
+  id trainee
+Sample output:
+  uid=1001(trainee) gid=1001(trainee) groups=1001(trainee)
+
+59. passwd
+Use: Sets or changes a user's password.
+Command:
+  sudo passwd trainee
+Sample output:
+  New password:
+  Retype new password:
+  passwd: all authentication tokens updated successfully
+Note: The password is not displayed while typing.
+
+60. groupadd
+Use: Creates a group.
+Command:
+  sudo groupadd devops
+Sample output:
+  (No output if successful.)
+
+61. usermod -aG
+Use: Adds a user to a supplementary group without removing existing supplementary groups.
+Command:
+  sudo usermod -aG devops trainee
+  id trainee
+Sample output:
+  uid=1001(trainee) gid=1001(trainee) groups=1001(trainee),1002(devops)
+
+62. sudo
+Use: Runs an authorized command with elevated privileges.
+Command:
+  sudo systemctl status nginx
+Sample output:
+  Active: active (running)
+Note: The service status depends on the machine.
+
+============================================================
+7. PROCESSES, CPU, AND MEMORY
+============================================================
+
+63. ps -ef
+Use: Lists running processes.
+Command:
+  ps -ef | head
+Sample output:
+  UID  PID  PPID C STIME TTY TIME CMD
+  root   1     0 0 Oct08 ?   00:00:05 /usr/lib/systemd/systemd
+
+64. ps aux --sort=-%cpu | head
+Use: Shows processes using the most CPU near the top.
+Command:
+  ps aux --sort=-%cpu | head
+Sample output:
+  USER PID %CPU %MEM COMMAND
+  root 900 12.0 1.2 /usr/bin/example
+Note: Example values are illustrative.
+
+65. ps aux --sort=-%mem | head
+Use: Shows processes using the most memory near the top.
+Command:
+  ps aux --sort=-%mem | head
+Sample output:
+  USER PID %CPU %MEM COMMAND
+  app 1200 2.0 18.5 java
+Note: Example values are illustrative.
+
+66. top
+Use: Live view of CPU, memory, load, and processes. Press q to exit.
+Command:
+  top
+Sample output:
+  %Cpu(s):  3.0 us, 1.0 sy, 96.0 id
+  MiB Mem :  1900 total, 500 free, 900 used, 500 buff/cache
+
+67. free -m
+Use: Shows memory and swap in MiB.
+Command:
+  free -m
+Sample output:
+  total used free shared buff/cache available
+  Mem: 1900 700 400 20 800 1000
+  Swap: 0 0 0
+
+68. vmstat 1 5
+Use: Displays system performance statistics every second, five times.
+Command:
+  vmstat 1 5
+Sample output:
+  procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+   r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+   1  0      0 400000  10000 500000    0    0     5    8  100  200  2  1 96  1  0
+Note: Column units and values vary.
+
+69. kill
+Use: Sends a signal to a process; TERM is the default and allows graceful shutdown.
+Command:
+  kill <PID>
+Sample output:
+  (No output if the signal was sent successfully.)
+Caution: Identify the process before stopping it.
+
+70. kill -9
+Use: Forcefully terminates a process when graceful termination fails.
+Command:
+  kill -9 <PID>
+Sample output:
+  (No output if successful.)
+Caution: Last resort; it does not allow the process to clean up.
+
+71. pgrep
+Use: Finds process IDs by process name/pattern.
+Command:
+  pgrep -a nginx
+Sample output:
+  900 nginx: master process /usr/sbin/nginx
+
+============================================================
+8. DISK AND FILESYSTEM TROUBLESHOOTING
+============================================================
+
+72. df -h
+Use: Shows filesystem capacity in human-readable units.
+Command:
+  df -h
+Sample output:
+  Filesystem      Size Used Avail Use% Mounted on
+  /dev/nvme0n1p1    20G  5G   15G  25% /
+
+73. df -i
+Use: Shows inode usage. A filesystem can run out of inodes even with free space.
+Command:
+  df -i
+Sample output:
+  Filesystem       Inodes IUsed IFree IUse% Mounted on
+  /dev/nvme0n1p1  1000000 20000 980000 2% /
+
+74. du -sh
+Use: Shows total size of a directory or file.
+Command:
+  du -sh /var/log
+Sample output:
+  120M /var/log
+
+75. du -sh /var/*
+Use: Compares sizes of immediate entries under /var.
+Command:
+  sudo du -sh /var/*
+Sample output:
+  20M /var/cache
+  120M /var/log
+  500M /var/lib
+
+76. lsof +L1
+Use: Finds open files that have been deleted but are still held open by a process; these can consume disk space.
+Command:
+  sudo lsof +L1
+Sample output:
+  COMMAND PID USER FD TYPE SIZE/OFF NLINK NAME
+  java    900 app  12w REG  2G      0      /var/log/app.log (deleted)
+Note: lsof may need installation and sudo access.
+
+============================================================
+9. SERVICES AND LOGS
+============================================================
+
+77. systemctl status nginx
+Use: Shows service status.
+Command:
+  sudo systemctl status nginx
+Sample output:
+  Active: active (running)
+Possible states include active (running), inactive (dead), and failed.
+
+78. systemctl start
+Use: Starts a service now.
+Command:
+  sudo systemctl start nginx
+Sample output:
+  (No output if successful.)
+
+79. systemctl stop
+Use: Stops a service.
+Command:
+  sudo systemctl stop nginx
+Sample output:
+  (No output if successful.)
+
+80. systemctl restart
+Use: Restarts a service.
+Command:
+  sudo systemctl restart nginx
+Sample output:
+  (No output if successful.)
+
+81. systemctl enable
+Use: Configures a service to start at boot.
+Command:
+  sudo systemctl enable nginx
+Sample output:
+  Created symlink /etc/systemd/system/multi-user.target.wants/nginx.service
+
+82. systemctl list-units --failed
+Use: Lists failed systemd units.
+Command:
+  systemctl list-units --failed
+Sample output:
+  UNIT          LOAD   ACTIVE SUB    DESCRIPTION
+  nginx.service loaded failed failed A high performance web server
+
+83. journalctl -u nginx -n 30 --no-pager
+Use: Shows the last 30 log entries for Nginx.
+Command:
+  sudo journalctl -u nginx -n 30 --no-pager
+Sample output:
+  nginx[900]: nginx: configuration file /etc/nginx/nginx.conf test is successful
+
+84. journalctl -u nginx -f
+Use: Follows new service logs in real time. Press Ctrl+C to stop.
+Command:
+  sudo journalctl -u nginx -f
+Sample output:
+  nginx[900]: Started a high performance web server.
+
+85. journalctl --since "1 hour ago"
+Use: Shows system journal entries from the last hour.
+Command:
+  sudo journalctl --since "1 hour ago" --no-pager
+Sample output:
+  Oct 09 10:00:00 ip-10-0-1-25 systemd[1]: Started Session 12.
+
+86. dmesg
+Use: Shows kernel messages; useful for hardware, driver, and some memory-related errors.
+Command:
+  dmesg | tail
+Sample output:
+  [12345.678] eth0: Link is Up
+
+============================================================
+10. NETWORKING COMMANDS
+============================================================
+
+87. ip addr
+Use: Shows network interfaces and IP addresses.
+Command:
+  ip addr
+Sample output:
+  2: eth0: <BROADCAST,MULTICAST,UP>
+      inet 10.0.1.25/24 scope global eth0
+
+88. ip link
+Use: Shows network interface status.
+Command:
+  ip link
+Sample output:
+  2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 9001
+
+89. ip route
+Use: Shows the routing table and default gateway.
+Command:
+  ip route
+Sample output:
+  default via 10.0.1.1 dev eth0
+  10.0.1.0/24 dev eth0 proto kernel scope link
+
+90. ping -c 4
+Use: Tests basic IP reachability and latency; ICMP may be blocked.
+Command:
+  ping -c 4 8.8.8.8
+Sample output:
+  4 packets transmitted, 4 received, 0% packet loss
+
+91. ss -lntp
+Use: Lists listening TCP ports and associated processes (process details may require sudo).
+Command:
+  sudo ss -lntp
+Sample output:
+  LISTEN 0 511 0.0.0.0:80 0.0.0.0:* users:(("nginx",pid=900,fd=6))
+
+92. ss -lntp | grep :22
+Use: Checks whether a TCP listener is using port 22.
+Command:
+  sudo ss -lntp | grep :22
+Sample output:
+  LISTEN 0 128 0.0.0.0:22 0.0.0.0:* users:(("sshd",pid=700,fd=3))
+
+93. curl
+Use: Sends HTTP/HTTPS requests and displays response content; useful for testing apps and APIs.
+Command:
+  curl http://localhost/Sarma.html
+Sample output:
+  <h1>Application is running</h1>
+  <h2>Welcome to Sarma</h2>
+
+94. curl -I
+Use: Displays response headers only.
+Command:
+  curl -I http://localhost/Sarma.html
+Sample output:
+  HTTP/1.1 200 OK
+  Server: nginx
+  Content-Type: text/html
+
+95. curl -v
+Use: Shows detailed request/connection information for troubleshooting.
+Command:
+  curl -v http://localhost
+Sample output:
+  * Connected to localhost (127.0.0.1) port 80
+  < HTTP/1.1 200 OK
+
+96. nslookup
+Use: Queries DNS for a hostname.
+Command:
+  nslookup example.com
+Sample output:
+  Name: example.com
+  Address: 93.184.216.34
+Note: IP address may change.
+
+97. dig
+Use: Provides detailed DNS lookup information.
+Command:
+  dig example.com
+Sample output:
+  ;; ANSWER SECTION:
+  example.com.  300 IN A 93.184.216.34
+Note: Output and address can differ.
+
+98. cat /etc/hosts
+Use: Shows local hostname-to-address mappings.
+Command:
+  cat /etc/hosts
+Sample output:
+  127.0.0.1 localhost
+
+99. cat /etc/resolv.conf
+Use: Shows DNS resolver configuration.
+Command:
+  cat /etc/resolv.conf
+Sample output:
+  nameserver 10.0.0.2
+
+100. traceroute
+Use: Shows hops along a network path. Install if missing; some networks block probes.
+Command:
+  traceroute example.com
+Sample output:
+  1  10.0.1.1  1.0 ms
+  2  * * *
+Note: * means no response to that probe, not always a failure.
+
+101. curl -sS -o /dev/null -w
+Use: Measures HTTP status and total request time without printing the body.
+Command:
+  curl -sS -o /dev/null -w 'HTTP %{http_code}; total %{time_total}s\\n' http://localhost
+Sample output:
+  HTTP 200; total 0.004s
+
+============================================================
+11. PACKAGE MANAGEMENT (AMAZON LINUX 2023)
+============================================================
+
+102. dnf search nginx
+Use: Searches available package repositories.
+Command:
+  dnf search nginx
+Sample output:
+  nginx.x86_64 : A high performance web server
+
+103. sudo dnf install nginx -y
+Use: Installs Nginx and automatically answers yes to package confirmation.
+Command:
+  sudo dnf install nginx -y
+Sample output:
+  Complete!
+Note: Repository output varies.
+
+104. rpm -qa
+Use: Lists installed RPM packages.
+Command:
+  rpm -qa | grep nginx
+Sample output:
+  nginx-1.x.x-1.amzn2023.x86_64
+
+105. sudo dnf update
+Use: Updates installed packages where updates are available.
+Command:
+  sudo dnf update
+Sample output:
+  Complete!
+Caution: Review changes before updating production systems.
+
+============================================================
+12. SSH AND JAVA
+============================================================
+
+106. Check OpenSSH server package
+Use: Checks whether the SSH server package is installed.
+Command:
+  rpm -qa | grep openssh-server
+Sample output:
+  openssh-server-8.xp1-1.amzn2023.x86_64
+
+107. Install OpenSSH server if missing
+Use: Installs the SSH server package on Amazon Linux 2023.
+Command:
+  sudo dnf install openssh-server -y
+Sample output:
+  Complete!
+
+108. Start and enable SSH service
+Use: Starts sshd and configures it to start at boot.
+Command:
+  sudo systemctl enable --now sshd
+  sudo systemctl status sshd
+Sample output:
+  Active: active (running)
+
+109. Validate SSH daemon configuration
+Use: Checks sshd configuration syntax before restarting.
+Command:
+  sudo sshd -t
+Sample output:
+  (No output means no syntax error was reported.)
+
+110. Check SSH port
+Use: Checks whether sshd is listening on TCP port 22.
+Command:
+  sudo ss -lntp | grep :22
+Sample output:
+  LISTEN 0 128 0.0.0.0:22 0.0.0.0:* users:(("sshd",pid=700,fd=3))
+
+111. Check Java version
+Use: Displays the installed Java runtime version.
+Command:
+  java -version
+Sample output:
+  openjdk version "17.0.x" 2026-10-09
+
+112. Install Java 17 on Amazon Linux 2023
+Use: Installs Amazon Corretto Java 17.
+Command:
+  sudo dnf install java-17-amazon-corretto -y
+Sample output:
+  Complete!
+
+113. which java
+Use: Shows the Java executable found in PATH.
+Command:
+  which java
+Sample output:
+  /usr/bin/java
+
+114. readlink -f $(which java)
+Use: Resolves the Java executable path.
+Command:
+  readlink -f $(which java)
+Sample output:
+  /usr/lib/jvm/java-17-amazon-corretto.x86_64/bin/java
+Note: Actual path depends on installed Java version/package.
+
+115. printenv / echo environment variables
+Use: Displays environment variables.
+Command:
+  echo "$PATH"
+  echo "$JAVA_HOME"
+Sample output:
+  /usr/local/bin:/usr/bin:/bin
+  (JAVA_HOME may be blank if not configured.)
+
+============================================================
+13. NGINX DEPLOYMENT: Sarma.html
+============================================================
+
+Goal: Install Nginx, create Sarma.html, and access it from a browser.
+
+Step 1: Install Nginx (Amazon Linux 2023)
+  sudo dnf install nginx -y
+
+Step 2: Start and enable it
+  sudo systemctl enable --now nginx
+
+Step 3: Verify service
+  sudo systemctl status nginx
+Expected:
+  Active: active (running)
+
+Step 4: Validate configuration
+  sudo nginx -t
+Expected:
+  nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+  nginx: configuration file /etc/nginx/nginx.conf test is successful
+
+Step 5: Create the HTML page
+  sudo tee /usr/share/nginx/html/Sarma.html > /dev/null <<'EOF'
+  <!DOCTYPE html>
+  <html>
+  <head><title>Sarma Application</title></head>
+  <body>
+    <h1>Application is running</h1>
+    <h2>Welcome to Sarma</h2>
+  </body>
+  </html>
+  EOF
+
+Step 6: Check file
+  ls -l /usr/share/nginx/html/Sarma.html
+Expected:
+  -rw-r--r-- 1 root root ... /usr/share/nginx/html/Sarma.html
+
+Step 7: Test locally
+  curl -I http://localhost/Sarma.html
+Expected:
+  HTTP/1.1 200 OK
+
+Step 8: Check listener
+  sudo ss -lntp | grep :80
+Expected:
+  LISTEN ... 0.0.0.0:80 ... nginx
+
+Step 9: Allow inbound HTTP in the EC2 Security Group
+  Add inbound rule: HTTP, TCP, port 80, source 0.0.0.0/0 for a temporary public training page.
+  For production, restrict access as appropriate. Ensure the instance has a public IP and a route through an Internet Gateway if it is in a public subnet.
+
+Step 10: Open from your computer browser
+  http://<EC2-PUBLIC-IP>/Sarma.html
+
+Troubleshooting if Nginx is inactive or failed:
+  sudo nginx -t
+  sudo systemctl status nginx --no-pager
+  sudo journalctl -u nginx -n 50 --no-pager
+  sudo ss -lntp | grep :80
+  sudo tail -n 50 /var/log/nginx/error.log
+
+If local curl works but browser cannot reach the page, check:
+  - EC2 Security Group inbound TCP/80
+  - Public IP and subnet route/Internet Gateway
+  - Network ACL rules
+  - OS firewall, if configured
+  - Correct URL and file name (Linux filenames are case-sensitive)
+
+============================================================
+14. USEFUL PIPES AND REDIRECTION
+============================================================
+
+116. Pipe |
+Use: Sends output from one command to another command.
+Command:
+  ps -ef | grep nginx
+Sample output:
+  root 900 1 0 10:00 ? 00:00:00 nginx: master process
+
+117. Output redirection >
+Use: Writes output to a file, replacing existing contents.
+Command:
+  echo 'Hello Linux' > output.txt
+  cat output.txt
+Sample output:
+  Hello Linux
+
+118. Append redirection >>
+Use: Adds output to the end of a file.
+Command:
+  echo 'Second line' >> output.txt
+  cat output.txt
+Sample output:
+  Hello Linux
+  Second line
+
+119. Standard error redirection 2>
+Use: Writes error messages to a separate file.
+Command:
+  ls /missing-path 2> errors.txt
+  cat errors.txt
+Sample output:
+  ls: cannot access '/missing-path': No such file or directory
+
+120. tee
+Use: Displays output and writes it to a file at the same time.
+Command:
+  echo 'deployment started' | tee deploy.log
+Sample output:
+  deployment started
+
+============================================================
+15. REAL-WORLD TROUBLESHOOTING CHECKLIST
+============================================================
+
+SCENARIO A: Nginx website is down
+1. Check instance status in AWS console.
+2. Check service:
+     sudo systemctl status nginx
+3. Check configuration:
+     sudo nginx -t
+4. Check logs:
+     sudo journalctl -u nginx -n 50 --no-pager
+5. Check port:
+     sudo ss -lntp | grep :80
+6. Test locally:
+     curl -I http://localhost/Sarma.html
+7. If local test works but external access fails, check Security Group, route, public IP, NACL, and firewall.
+
+SCENARIO B: Disk usage is high
+1. Check filesystems:
+     df -h
+2. Check inodes:
+     df -i
+3. Find large directories:
+     sudo du -sh /var/*
+4. Find large files:
+     sudo find /var -type f -size +500M -exec ls -lh {} \\;
+5. Check deleted-but-open files:
+     sudo lsof +L1
+Do not delete logs blindly; confirm ownership, retention, and impact first.
+
+SCENARIO C: CPU usage is high
+1. Run:
+     top
+2. Identify top CPU processes:
+     ps aux --sort=-%cpu | head
+3. Check logs and recent changes.
+4. Confirm with the application owner before terminating production processes.
+
+SCENARIO D: Memory usage is high
+1. Run:
+     free -m
+2. Identify processes:
+     ps aux --sort=-%mem | head
+3. Investigate application behavior, logs, and workload before restarting or killing anything.
+
+SCENARIO E: Port 8080 is unreachable
+1. Check listener:
+     sudo ss -lntp | grep :8080
+2. Test locally:
+     curl -v http://localhost:8080
+3. If no listener exists, check whether the application is running and configured for port 8080.
+4. If local curl works but remote access fails, check the app bind address, OS firewall, Security Group, NACL, route, and load balancer.
+
+SCENARIO F: DNS problem
+1. Test IP connectivity:
+     ping -c 4 8.8.8.8
+2. Test DNS:
+     nslookup example.com
+     dig example.com
+3. Review:
+     cat /etc/resolv.conf
+A blocked ping alone does not prove internet connectivity is broken; ICMP can be filtered.
+
+SCENARIO G: SSH connection fails
+1. Confirm instance is running and the IP/key/username are correct.
+2. Check sshd:
+     sudo systemctl status sshd
+3. Check port:
+     sudo ss -lntp | grep :22
+4. Check AWS Security Group inbound TCP/22 from the required trusted source.
+5. Review route, NACL, network connectivity, and:
+     sudo journalctl -u sshd -n 50 --no-pager
+Never expose SSH to the whole internet unless there is a justified, controlled need; prefer a trusted IP, VPN, or managed access service.
+
+============================================================
+16. QUICK INTERVIEW DEFINITIONS
+============================================================
+
+pwd      - Prints the current working directory.
+ls       - Lists files and directories.
+grep     - Searches text using a pattern.
+find     - Finds files/directories by criteria.
+awk      - Extracts and processes fields/records in text.
+sed      - Substitutes, prints, or deletes text from streams/files.
+curl     - Sends URL requests and tests HTTP/HTTPS endpoints.
+df -h    - Shows filesystem capacity and usage.
+du -sh   - Shows the size of a file/directory.
+free -m  - Shows memory and swap usage.
+top      - Displays live system and process statistics.
+ps -ef   - Lists processes.
+ss       - Shows sockets and listening ports.
+systemctl - Manages systemd services.
+journalctl - Reads the systemd journal.
+chmod    - Changes permissions.
+chown    - Changes ownership.
+tail -f  - Follows new log lines.
+lsof     - Lists open files.
+ip addr  - Shows interfaces and IP addresses.
+ip route - Shows the routing table.
+nslookup/dig - Troubleshoot DNS resolution.
+
